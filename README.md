@@ -1,6 +1,5 @@
 Memory Card Game
 
-Frameworks Explored:
+Framworks Explored 
 - SwiftUI
 - SwiftData
-
