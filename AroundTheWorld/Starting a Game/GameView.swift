@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct GameView: View {
-    var newGame = GenerateCards()
+    @Environment(\.modelContext) var modelContext
+    @State private var newGame = GenerateCards()
     @State private var flippedCards: [String] = []
     @State private var matchMessage = ""
     @State private var score = 0
@@ -16,6 +18,11 @@ struct GameView: View {
     @State private var lastFlipTime = Date()
     @State private var timePassed = 0
     @State private var startTime = Date()
+    @State private var matchesMade = 0
+    @State private var showAlert = false
+    @State private var endMessage = "Good Game!"
+    @State private var timer: Timer? = nil
+    @State private var gameMatches: [String:String] = [:]
     
     let countryDict: [String: String] = ["🇺🇸":"United States of America",
                                          "🇰🇪":"Kenya", "🇨🇳":"China", "🇮🇳":"India",
@@ -39,9 +46,14 @@ struct GameView: View {
                         .font(.largeTitle)
                         .bold()
                     Spacer() //Adds available space between the elements of the Horizontal Stack
-                    Text("Time: \(formatTime(timePassed))")
-                        .font(.title3)
-                        .bold()
+                    VStack {
+                        Text("Time:")
+                            .font(.title3)
+                            .bold()
+                        Text("\(formatTime(timePassed))")
+                            .font(.title3)
+                            .bold()
+                    }
                 }
                 HStack {
                     CardView(thisCard: newGame[0], flippedCards: $flippedCards, isCheckingMatch: $isCheckingMatch)
@@ -69,20 +81,28 @@ struct GameView: View {
                     .padding()
                     .frame(maxWidth: .infinity)
             }
+            .padding(.horizontal)
+            .alert("Woah!", isPresented: $showAlert) {
+                Button("Start New Game", action: restartGame)
+                Button("I'm good", role: .cancel) {}
+                } message: {
+                    Text("You beat the game.")
+            }
             .cornerRadius(3)
         
             .onAppear() {
                 startTime = Date()
-            }
-        
-            //OnRecieve is new to me but I found out it can be used to update a variable every second based on a timer.
-            .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
-                let currentTime = Date()
-                timePassed = Int(currentTime.timeIntervalSince(startTime))
+                
+                //This will start a new Timer object with an interval to update/run the code inside every 1 section
+                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                    let currentTime = Date() //Set a new CurrentTime Object
+                    //Set timepassed as the INT conversion of the current time's interval since the start time (norm a double)
+                    timePassed = Int(currentTime.timeIntervalSince(startTime))
+                }
             }
         
             .onDisappear() {
-                timePassed = 0
+                restartGame()
             }
         
             .onChange(of: flippedCards) {
@@ -93,6 +113,12 @@ struct GameView: View {
     }
     
     
+    
+    //Helper Functions
+    
+    
+    
+    //Check for a match between two flipped cards
     func checkForMatch() {
         //First ensure there are two cards to compare
         guard flippedCards.count == 2 else { //Leave if there aren't two items in flippedCards
@@ -108,25 +134,54 @@ struct GameView: View {
         if countryDict[firstCard] == secondCard || countryDict[secondCard] == firstCard {
             matchMessage = "Match Found" //Alert the user that a match was found
             lockCards(firstCard, secondCard) //Lock the cards that resulted in Valid Matches
+            matchesMade += 1 //Increment Matches Made
             
             //The reward for a match is 1000 - time penalty, with the timepenalty based off how long between the current and last match. This makes sure there's some incentive to finish fast
             let timeBonus = max(10000 - Int(Date().timeIntervalSince(lastFlipTime)) * 10, 0)
             
             score += timeBonus //Increment score by timeBonus reward
             
-            lastFlipTime = Date() //Update the LastFlippedTime
+            if matchesMade == 6 { //Check to see if this was the last Match to make!!! -> Game Over
+                if timePassed < 120 {
+                    endMessage = "Woah, you're quick!"
+                }
+                showAlert = true
+                timer?.invalidate()
+                saveGame()
+            } else {
+                lastFlipTime = Date() //Update the LastFlippedTime if not
+            }
             
         } else {
             matchMessage = "Match Not Found"
             score -= 250 //Subtract score by penalty
         }
         
-        //After a delay of 2 seconds perform these actions
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        //After a delay of 1 second to perform these actions
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             matchMessage = "" //reset matchMessage to ""
             unflipAll() //Unflip all the cards (Locked cards won't flip)
-            isCheckingMatch = false //Reset the isCheckingMatch flag
+            isCheckingMatch = false //Reset isCheckingMatch flag
             flippedCards.removeAll() //Reset the arr of flipped cards
+        }
+    }
+    
+    
+    //This Function will Restart the Game
+    func restartGame() {
+        self.newGame = GenerateCards() //Generate new cards
+        self.flippedCards = [] //Reset flipped cards
+        self.matchMessage = "" //Clear message
+        self.score = 0 //Reset score
+        self.startTime = Date() //Reset starttime
+        self.timePassed = 0 //Reset timepassed
+        self.matchesMade = 0 //Reset matches made
+        self.showAlert = false //Reset alert bool
+        self.endMessage = "Good Game!" //Reset the End Message
+        //Restart the timer
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                let currentTime = Date()
+                timePassed = Int(currentTime.timeIntervalSince(startTime))
         }
     }
     
@@ -152,6 +207,12 @@ struct GameView: View {
                 cards.isLocked = true
             }
         }
+    }
+    
+    //Save the Game at the end
+    func saveGame() {
+        let savedGame = Game(timestamp: startTime, timeTaken: "\(formatTime(timePassed))", gameMatches: gameMatches, score: score)
+        modelContext.insert(savedGame)
     }
 }
 

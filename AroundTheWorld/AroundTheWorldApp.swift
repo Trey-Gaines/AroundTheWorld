@@ -1,3 +1,5 @@
+// I used image from NASA as app image. The specific link was from:
+//
 //
 //  AroundTheWorldApp.swift
 //  AroundTheWorld
@@ -10,6 +12,8 @@ import SwiftData
 
 @main
 struct AroundTheWorldApp: App {
+    @AppStorage("isDarkMode") var isDarkMode: Bool = true //Set default DarkMode for App
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Game.self,
@@ -26,6 +30,8 @@ struct AroundTheWorldApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+            //Allows the preferred Color Scheme to be modified, but will default to darkMode
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
         .modelContainer(sharedModelContainer)
     }

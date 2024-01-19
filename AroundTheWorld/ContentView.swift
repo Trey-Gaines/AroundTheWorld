@@ -2,54 +2,45 @@
 //  ContentView.swift
 //  AroundTheWorld
 //
-//  Created by Trey Gaines on 1/16/24.
+//  Created by Trey Gaines on 1/19/24.
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var games: [Game]
+    @State private var selectedTab = 1
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(games) { game in
-                    NavigationLink {
-                        Text("Item at \(game.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(game.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        NavigationView {
+            VStack {
+                HStack {
+                    Button(action: { selectedTab = 0 }) {
+                        Text("Scores")
+                            .foregroundColor(selectedTab == 0 ? .blue : .gray)
+                    }
+                    Spacer() //Spacers in between the buttons
+                    Button(action: { selectedTab = 1 }) {
+                        Text("New Game")
+                            .foregroundColor(selectedTab == 1 ? .blue : .gray)
+                    }
+                    Spacer()
+                    Button(action: { selectedTab = 2 }) {
+                        Text("Settings")
+                            .foregroundColor(selectedTab == 2 ? .blue : .gray)
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
+                .padding(.bottom, 5)
+                .padding(.horizontal)
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Game(timestamp: Date(), gameComplete: true, game: ["String"], score: 0)
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(games[index])
+                switch selectedTab { //Here's a switch for the selectedTab Variable
+                case 0: //If 0, show scores
+                    PreviousGamesView()
+                case 1: //If 1, start a new game
+                    GameView()
+                default: //Otherwise show the settings
+                    StatsAndSettingsView()
+                }
+                Spacer()
             }
         }
     }
@@ -57,5 +48,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Game.self, inMemory: true)
 }
+

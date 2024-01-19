@@ -30,15 +30,16 @@ struct CardView: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.white)
                     
-                    //I wanted the flags to be big, but this made the text wrap. Text().linelimit acts upon the whole string, so I used forEach on the cardString and gave it a linelimit
+                    //I wanted the flags to be big, but this made the text wrap. Text().linelimit acts upon the whole string, so I used forEach on the cardString and gave it a linelimit.
                     VStack {
                         ForEach(thisCard.back.split(separator: " ").map(String.init), id: \.self) { word in
                             Text(word)
-                                .foregroundColor(.black) //Text color
-                                .font(.system(size: 48, weight: .bold, design: .rounded)) //set font for the string
-                                .lineLimit(1) //Ensures no text wrap
-                                .minimumScaleFactor(0.1)  //Scales font size if needed
-                                .multilineTextAlignment(.center) //Centers text/flag
+                                .foregroundColor(.black)
+                                .font(.system(size: 48, weight: .bold, design: .rounded))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                                .frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center)
                         }
                     }
                     .padding()
@@ -52,6 +53,14 @@ struct CardView: View {
             }
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 struct CardView_Previews: PreviewProvider {

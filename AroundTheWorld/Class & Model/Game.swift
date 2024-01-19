@@ -11,15 +11,15 @@ import SwiftData
 @Model
 final class Game {
     var timestamp = Date()
-    var gameComplete: Bool
-    var game: [String]
+    var timeTaken: String
+    var gameMatches: [String:String]
     var score: Int
     
     
-    init(timestamp: Date, gameComplete: Bool, game: [String], score: Int) {
+    init(timestamp: Date, timeTaken: String, gameMatches: [String:String], score: Int) {
         self.timestamp = timestamp
-        self.gameComplete = gameComplete
-        self.game = game
+        self.timeTaken = timeTaken
+        self.gameMatches = gameMatches
         self.score = score
     }
 }
