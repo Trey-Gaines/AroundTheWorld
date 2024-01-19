@@ -18,7 +18,7 @@
 		2DA1125A2B5865DF0011C407 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA112592B5865DF0011C407 /* CardView.swift */; };
 		2DA1125F2B5AEC2D0011C407 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA1125E2B5AEC2D0011C407 /* ContentView.swift */; };
 		2DA112612B5AEC990011C407 /* StatsAndSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA112602B5AEC990011C407 /* StatsAndSettingsView.swift */; };
-		2DA112672B5B05040011C407 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 2DA112662B5B05040011C407 /* Images */; };
+		2DA112692B5B05F80011C407 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 2DA112682B5B05F80011C407 /* Images */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +36,7 @@
 		2DA112592B5865DF0011C407 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		2DA1125E2B5AEC2D0011C407 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2DA112602B5AEC990011C407 /* StatsAndSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsAndSettingsView.swift; sourceTree = "<group>"; };
-		2DA112662B5B05040011C407 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Images; path = ../../Desktop/Images; sourceTree = "<group>"; };
+		2DA112682B5B05F80011C407 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +53,7 @@
 		2DA112332B5717FE0011C407 = {
 			isa = PBXGroup;
 			children = (
-				2DA112662B5B05040011C407 /* Images */,
+				2DA112682B5B05F80011C407 /* Images */,
 				2DA1123E2B5717FE0011C407 /* AroundTheWorld */,
 				2DA1123D2B5717FE0011C407 /* Products */,
 			);
@@ -170,7 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA112492B5717FF0011C407 /* Preview Assets.xcassets in Resources */,
-				2DA112672B5B05040011C407 /* Images in Resources */,
+				2DA112692B5B05F80011C407 /* Images in Resources */,
 				2DA112462B5717FF0011C407 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
