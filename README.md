@@ -30,4 +30,6 @@ Memory Card Game to match up a Country/Flag
 <br/>
 
 ### Here's a game example:
-![Alt text](https://github.com/Trey-Gaines/AroundTheWorld/blob/main/Images/AFullGame.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Trey-Gaines/AroundTheWorld/blob/main/Images/AFullGame.png?raw=true" alt="Game Example" width="300"/>
+</p>
